@@ -9,6 +9,13 @@
 
     <!-- Custom CSS (now in the /css folder) -->
     <link rel="stylesheet" href="css/style.css">
+
+    <script type="text/x-mathjax-config">
+        MathJax.Hub.Config({tex2jax: {inlineMath: [['$','$'], ['\\(','\\)']]}});
+    </script>
+    <script type="text/javascript"
+        src="http://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML">
+    </script>
 </head>
 <body>
 
@@ -22,6 +29,7 @@
                 <input type="text" class="form-control" id="designator" placeholder="Designator">
                 <select id="sweepMode" class="form-control">
                     <option value="list">List</option>
+                    <option value="tolerance">Tolerance</option>
                     <!-- <option value="linear">Linear</option> -->
                 </select>
 
@@ -32,6 +40,10 @@
                 <input type="text" class="form-control mode-specific mode-linear" id="linear-start" placeholder="Start">
                 <input type="text" class="form-control mode-specific mode-linear" id="list-end" placeholder="End">
                 <input type="text" class="form-control mode-specific mode-linear" id="list-step" placeholder="Step">
+
+                <!-- Tolerance Sweep -->
+                <input type="text" class="form-control mode-specific mode-tolerance" id="tolerance-base" placeholder="Base Value (e.g. 1Meg,10n)">
+                <input type="number" class="form-control mode-specific mode-tolerance" id="tolerance-tolerance" placeholder="Tolerance (%)">
 
                 <button class="btn btn-primary" id="addTaskButton">Add Task</button>
             </div>
@@ -63,6 +75,20 @@
                 <tbody>
                 </tbody>
             </table> -->
+
+            <h2 class="text-left mb-4">Tolerance Mode</h2>
+            <table class="table table-bordered" id="mode-tolerance-table">
+                <thead>
+                    <tr>
+                        <th>Designator</th>
+                        <th>Base Value</th>
+                        <th>Tolerance</th>
+                        <th></th>
+                    </tr>
+                </thead>
+                <tbody>
+                </tbody>
+            </table>
         
             <hr class="hr">
             <button class="btn btn-primary" id="generateCommandsBtn">Generate Commands</button>

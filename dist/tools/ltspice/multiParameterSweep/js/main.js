@@ -60,18 +60,28 @@ function removeTask(button) {
     row.remove();
 }
 
-document.getElementById('generateCommandsBtn').addEventListener('click', function(event) {
-    table_list = Array.from(document.getElementById(`mode-list-table`).rows).slice(1)
 
-    table_list = table_list.map(function (row, row_idx) {
+function processTable(table_id) {
+    table = Array.from(document.getElementById(table_id).rows).slice(1)
+    table = table.map(function (row, row_idx) {
         return Array.from(row.cells).slice(0, -1).map(function (cell) {
             return cell.textContent
         })
     })
+    return table
+}
 
-    params = table_list.map(function (x) {
+document.getElementById('generateCommandsBtn').addEventListener('click', function(event) {
+    table_list = processTable('mode-list-table')
+    tolerance_list = processTable('mode-tolerance-table')
+
+    params = []
+    params = params.concat(table_list.map(function (x) {
         return Parameter.createFromListSweep(x)
-    })
+    }))
+    params = params.concat(tolerance_list.map(function (x) {
+        return Parameter.createFromToleranceSweep(x)
+    }))
 
     totalRuns = params.reduce((iterCount, param) => {
         return iterCount * param.totalValues()
@@ -87,7 +97,7 @@ document.getElementById('generateCommandsBtn').addEventListener('click', functio
         values = param.values.reduce((str, v, i) => {
             return `${str},${i+1},${v}`
         }, "")
-        command += `.param ${param.designator} table(run_idx,${values})\n`
+        command += `.param ${param.designator} table(run_idx${values})\n`
     })
 
 
@@ -102,6 +112,4 @@ document.getElementById('generateCommandsBtn').addEventListener('click', functio
             alert("Command has been generated. Copy it from below and paste into LTSpice.")
         }
     }, 50);
-
-    debugger
 })

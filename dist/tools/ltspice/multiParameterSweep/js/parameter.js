@@ -13,4 +13,20 @@ class Parameter {
     static createFromListSweep(inputs) {
         return new Parameter(inputs[0], inputs[1].replaceAll(' ', '').split(','))
     }
+
+    static createFromToleranceSweep(inputs) {
+        const tolerance = parseFloat(inputs[2])
+        const baseValStr = inputs[1].toLowerCase()
+        const units = baseValStr.split('').filter((x) => {
+            return 'abcdefghijklmnopqrstuvwxyz'.includes(x)
+        }).join('')
+
+        const baseVal = parseFloat(baseValStr)
+        return new Parameter(inputs[0], 
+            [
+                `${baseVal*(1-tolerance/100)}${units}`, 
+                `${baseVal}${units}`, 
+                `${baseVal*(1+tolerance/100)}${units}`
+            ])
+    }
 }

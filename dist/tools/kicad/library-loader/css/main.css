@@ -1,0 +1,16 @@
+body {
+  background: #131418;
+  text-align: center;
+  margin-top: 10%;
+  color: #f8f8f2;
+}
+
+#lib {
+  margin-top: 2em;
+}
+
+#submit_btn {
+  margin-top: 2em;
+  width: 25%;
+  height: 2em;
+}

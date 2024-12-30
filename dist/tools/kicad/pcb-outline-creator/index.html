@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width" />
+    <title>KiCad PCB Outline Creator</title>
+    <script src="js/main.js" defer></script>
+    <link rel="stylesheet" href="css/main.css" type="text/css" media="screen">
+</head>
+
+<body>
+
+    <h1>KiCad PCB Outline Creator</h1>
+    <div class="container">
+        <label class="lbl">Width (mm)</label><input type="number" name="rect_width" id="rect_width" value="50">
+        <label class="lbl">Height (mm)</label><input type="number" name="rect_height" id="rect_height" value="50">
+        <label class="lbl">Corner Radius (mm)</label><input type="number" name="fillet" id="fillet" value="5">
+        <label class="lbl">Layer (mm)</label>
+        <select name="layer" id="layer_select">
+            <option>F.Cu</option>
+            <option>In1.Cu</option>
+            <option>In2.Cu</option>
+            <option>B.Cu</option>
+            <option>B.Adhes</option>
+            <option>F.Adhes</option>
+            <option>B.Paste</option>
+            <option>F.Paste</option>
+            <option>B.SilkS</option>
+            <option>F.SilkS</option>
+            <option>B.Mask</option>
+            <option>F.Mask</option>
+            <option>Dwgs.User</option>
+            <option>Cmts.User</option>
+            <option>Eco1.User</option>
+            <option>Eco2.User</option>
+            <option selected="selected">Edge.Cuts</option>
+            <option>Margin</option>
+            <option>B.CrtYd</option>
+            <option>F.CrtYd</option>
+            <option>B.Fab</option>
+            <option>F.Fab</option>
+            <option>User.1</option>
+            <option>User.2</option>
+            <option>User.3</option>
+            <option>User.4</option>
+            <option>User.5</option>
+            <option>User.6</option>
+            <option>User.7</option>
+            <option>User.8</option>
+            <option>User.9</option>
+        </select>
+        <input type="submit" id='submit_btn' class="submit_btn" value="Generate" />
+        <textarea name="output" id="output" readonly></textarea>
+    </div>
+
+</body>
+
+</html>

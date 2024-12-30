@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>LTSpice MultiParameter Sweep Creator</title>
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
+
+    <!-- Custom CSS (now in the /css folder) -->
+    <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+
+<div class="container-fluid my-5">
+    <div class="row">
+        <div class="col-md-8 offset-md-2">
+            <h1 class="text-center mb-4">LTSpice MultiParameter Sweep Creator</h2>
+            
+            <!-- Add New Task Form -->
+            <div class="input-group mb-3">
+                <input type="text" class="form-control" id="designator" placeholder="Designator">
+                <select id="sweepMode" class="form-control">
+                    <option value="list">List</option>
+                    <!-- <option value="linear">Linear</option> -->
+                </select>
+
+                <!-- List Sweep -->
+                <input type="text" class="form-control mode-specific mode-list" id="list-values" placeholder="Values (e.g. 1k,2k,3k)">
+
+                <!-- Linear Sweep -->
+                <input type="text" class="form-control mode-specific mode-linear" id="linear-start" placeholder="Start">
+                <input type="text" class="form-control mode-specific mode-linear" id="list-end" placeholder="End">
+                <input type="text" class="form-control mode-specific mode-linear" id="list-step" placeholder="Step">
+
+                <button class="btn btn-primary" id="addTaskButton">Add Task</button>
+            </div>
+
+            <h2 class="text-left mb-4">List Mode</h2>
+            <table class="table table-bordered" id="mode-list-table">
+                <thead>
+                    <tr>
+                        <th>Designator</th>
+                        <th>Values</th>
+                        <th></th>
+                    </tr>
+                </thead>
+                <tbody>
+                </tbody>
+            </table>
+
+            <!-- <h2 class="text-left mb-4">Linear Mode</h2>
+            <table class="table table-bordered" id="mode-linear-table">
+                <thead>
+                    <tr>
+                        <th>Designator</th>
+                        <th>Start Value</th>
+                        <th>End Value</th>
+                        <th>Step</th>
+                        <th></th>
+                    </tr>
+                </thead>
+                <tbody>
+                </tbody>
+            </table> -->
+        
+            <hr class="hr">
+            <button class="btn btn-primary" id="generateCommandsBtn">Generate Commands</button>
+            <div style="height: 100px" class="input-group mb-3">
+                <textarea class="form-control" id="commandOutput" readonly></textarea>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Bootstrap JS (Popper and Bootstrap JS) -->
+<script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.6/dist/umd/popper.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.min.js"></script>
+
+<!-- External JavaScript (now in the /js folder) -->
+<script src="js/parameter.js"></script>
+<script src="js/main.js"></script>
+
+</body>
+</html>

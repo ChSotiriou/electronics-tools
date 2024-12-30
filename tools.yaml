@@ -1,0 +1,11 @@
+KiCAD:
+  "PCB Outline Creator": 
+    link: 'tools/kicad/pcb-outline-creator'
+    desc: 'Create a rectangular PCB outline with rounded corners'
+  "Library Downloader":
+    link: 'tools/kicad/library-loader'
+    desc: 'Extract KiCAD files from SamacSys library (e.g. Mouser download)'
+LTSpice:
+  "MultiParameter Sweep":
+    link: 'tools/ltspice/multiParameterSweep'
+    desc: 'Simplifies creating a multiparameter sweep in LTSpice'

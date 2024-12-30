@@ -20,8 +20,7 @@ function cellPreventNewLine(cell) {
     })
 }
 
-// Function to add a new task to the table
-document.getElementById('addTaskButton').addEventListener('click', function() {
+function addParameter() {
     const mode = document.getElementById('sweepMode').value
     const designator = document.getElementById('designator').value.trim()
     
@@ -52,7 +51,9 @@ document.getElementById('addTaskButton').addEventListener('click', function() {
             <button class="btn btn-danger btn-sm" onclick="removeTask(this)">Delete</button>
         `;
     }
-});
+}
+
+document.getElementById('addTaskButton').addEventListener('click', addParameter);
 
 // Function to remove a task from the table
 function removeTask(button) {
@@ -71,6 +72,22 @@ function processTable(table_id) {
     return table
 }
 
+function generateRunStates(...args) {
+    var r = [], max = args.length-1;
+    function helper(arr, i) {
+        for (var j=0, l=args[i].values.length; j<l; j++) {
+            var a = arr.slice(0); // clone arr
+            a.push(args[i].values[j]);
+            if (i==max)
+                r.push(a);
+            else
+                helper(a, i+1);
+        }
+    }
+    helper([], 0);
+    return r;
+}
+
 document.getElementById('generateCommandsBtn').addEventListener('click', function(event) {
     table_list = processTable('mode-list-table')
     tolerance_list = processTable('mode-tolerance-table')
@@ -83,19 +100,13 @@ document.getElementById('generateCommandsBtn').addEventListener('click', functio
         return Parameter.createFromToleranceSweep(x)
     }))
 
-    totalRuns = params.reduce((iterCount, param) => {
-        return iterCount * param.totalValues()
-    }, 1)
-
-//     .step param Rx list 1 2 3
-// .param R1 table(Rx,1,1k,2,1Meg,3,1k)
-// .param R2 table(Rx,1,10k,2,1Meg,3,10Meg)
+    runStates = generateRunStates(...params)
 
     command = ""
-    command += `.step param run_idx 1 ${totalRuns} 1\n`
-    params.forEach((param) => {
-        values = param.values.reduce((str, v, i) => {
-            return `${str},${i+1},${v}`
+    command += `.step param run_idx 1 ${runStates.length} 1\n`
+    params.forEach((param, param_idx) => {
+        values = runStates.reduce((str, v, i) => {
+            return `${str},${i+1},${v[param_idx]}`
         }, "")
         command += `.param ${param.designator} table(run_idx${values})\n`
     })

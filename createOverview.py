@@ -12,3 +12,5 @@ tools = yaml.safe_load(open("./tools.yaml"))
 rendered_html = template.render(tools=tools)
 
 open("dist/index.html", 'w').write(rendered_html)
+
+import updateCommon

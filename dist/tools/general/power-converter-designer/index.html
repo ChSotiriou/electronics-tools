@@ -1,0 +1,221 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Power Converter Designer</title>
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
+
+    <!-- Custom CSS (now in the /css folder) -->
+    <link rel="stylesheet" href="css/style.css">
+
+    <script type="text/x-mathjax-config">
+        MathJax.Hub.Config({tex2jax: {inlineMath: [['$','$'], ['\\(','\\)']]}});
+    </script>
+    <script type="text/javascript"
+        src="http://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML">
+        </script>
+
+    <!-- __COMMON_HEAD_START__ -->
+    <style>
+            /* Make the body fill the height of the screen */
+        html, body {
+            height: 100%;
+        }
+
+        .footer {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            background-color: #333;
+            padding: 10px 0;
+            text-align: left;
+            color: white;
+            margin-top: auto;  /* Push the footer to the bottom of the page */
+        }
+        .footer i {
+            margin: 0 10px;
+            font-size: 18px;
+            cursor: pointer;
+        }
+        .footer i:hover {
+            color: #007bff;
+        }
+    </style>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css" rel="stylesheet">
+
+    <script src="https://unpkg.com/github-corner-element"></script>
+    <github-corner href="https://github.com/ChSotiriou/SimpleElectronicsTools"></github-corner>
+<!-- __COMMON_HEAD_END__ -->
+</head>
+
+<body>
+
+    <div class="container-fluid my-5">
+        <div class="row">
+            <div class="col-md-8 offset-md-2">
+                <h1 class="text-center mb-4">Power Converter Designer</h2>
+
+                    <div class="input-group mb-3">
+                        <span class="input-group-text bg-dark text-white" data-toggle="tooltip"
+                            title="Converter Type Selector">Converter Type</span>
+                        <select class="form-control" id="select-converter-type">
+                            <option value="buck">Buck</option>
+                            <option value="boost">Boost</option>
+                            <!-- <option value="buck-boost">Buck-Boost</option> -->
+                        </select>
+                    </div>
+
+                    <hr/>
+
+                    <div class="input-group mb-3">
+                        <span class="input-group-text bg-dark text-white" data-toggle="tooltip"
+                            title="Input Voltage">$V_{in} (V)$</span>
+                        <input type="number" class="form-control inputField" id="field_Vin" value=12 min=0 step=0.01>
+
+                        <span class="input-group-text bg-dark text-white" data-toggle="tooltip"
+                            title="Output Voltage">$V_{out} (V)$</span>
+                        <input type="number" class="form-control inputField" id="field_Vout" value=3.3 min=0 step=0.01>
+                    </div>
+
+                    <div class="input-group mb-3">
+                        <span class="input-group-text bg-dark text-white" data-toggle="tooltip"
+                            title="Input Voltage Ripple">$V_{in_{r}} (mV)$</span>
+                        <input type="number" class="form-control inputField" id="field_Vin_ripple" value=50 min=0 step=0.01>
+
+                        <span class="input-group-text bg-dark text-white" data-toggle="tooltip"
+                            title="Output Voltage Ripple">$V_{out_r} (mV)$</span>
+                        <input type="number" class="form-control inputField" id="field_Vout_ripple" value=30 min=0 step=0.01>
+                    </div>
+
+                    <div class="input-group mb-3">
+                        <span class="input-group-text bg-dark text-white" data-toggle="tooltip"
+                            title="Ripple Ratio">$r_{max}$</span>
+                        <input type="number" step=0.1 class="form-control inputField" id="field_r_max" value=0.4  min=0 step=0.01>
+
+                        <span class="input-group-text bg-dark text-white" data-toggle="tooltip"
+                            title="Max Output Current">$\hat{I_{o}} (A)$</span>
+                        <input type="number" class="form-control inputField" id="field_Io_max" value=2 min=0 step=0.01>
+
+                        <span class="input-group-text bg-dark text-white" data-toggle="tooltip"
+                            title="Switching Frequency">$f_s (kHz)$</span>
+                        <input type="number" class="form-control inputField" id="field_fs" value=100 min=0 step=0.01>
+                    </div>
+
+                    <div class="input-group mb-3">
+                        <span class="input-group-text bg-dark text-white" data-toggle="tooltip"
+                            title="Switch On Resistance">$R_{ds_{on}} (m\Omega)$</span>
+                        <input type="number" class="form-control inputField" step=0.1 id="field_switch_RdsOn" value=0 min=0 step=0.01>
+                        
+                        <span class="input-group-text bg-dark text-white" data-toggle="tooltip"
+                            title="Diode Voltage Drop">$V_{d_{drop}} (V)$</span>
+                        <input type="number" class="form-control inputField" step=0.1 id="field_diode_drop" value=0.6 min=0 step=0.01>
+                    </div>
+
+                    <hr/>
+                    <div class="input-group mb-3">
+                        <span class="input-group-text bg-dark text-white" data-toggle="tooltip"
+                            title="Calculated Duty Cycle">$Duty$</span>
+                        <input type="number" class="form-control outputField" readonly id="field_duty">
+
+                        <span class="input-group-text bg-dark text-white" data-toggle="tooltip"
+                            title="MOSFET Voltage Drop">$V_{sw_{drop}} (mV)$</span>
+                        <input type="number" class="form-control outputField" readonly id="field_switch_drop">
+
+                    </div>
+
+                    <div class="input-group mb-3">
+                        <span class="input-group-text bg-dark text-white" data-toggle="tooltip"
+                            title="Inductor current ripple">$\Delta I (A)$</span>
+                        <input type="number" class="form-control outputField" readonly id="field_deltaI">
+
+                        <span class="input-group-text bg-dark text-white" data-toggle="tooltip"
+                            title="Inductor Value">$L (\mu H)$</span>
+                        <input type="number" class="form-control outputField" readonly id="field_L">
+                    </div>
+
+                    <div class="input-group mb-3">
+                        <span class="input-group-text bg-dark text-white" data-toggle="tooltip"
+                            title="Input Capacitor Value">$C_{in} (\mu F)$</span>
+                        <input type="number" class="form-control outputField" readonly id="field_Cin">
+
+                        <span class="input-group-text bg-dark text-white" data-toggle="tooltip"
+                            title="Output Capacitor Value">$C_{out} (\mu F)$</span>
+                        <input type="number" class="form-control outputField" readonly id="field_Cout">
+                    </div>
+
+                    <hr/>
+
+                    <div class="input-group mb-3">
+                        <span class="input-group-text bg-dark text-white" data-toggle="tooltip"
+                            title="Switch RMS Current">$I_{sw_{RMS}} (A)$</span>
+                        <input type="number" class="form-control outputField" readonly id="field_switch_rms">
+
+                        <span class="input-group-text bg-dark text-white" data-toggle="tooltip"
+                            title="Diode RMS Current">$I_{d_{RMS}} (A)$</span>
+                        <input type="number" class="form-control outputField" readonly id="field_diode_rms">
+                    </div>
+
+                    <div class="input-group mb-3">
+                        <span class="input-group-text bg-dark text-white" data-toggle="tooltip"
+                            title="Input Capacitor RMS Current">$I_{Cin_{RMS}} (A)$</span>
+                        <input type="number" class="form-control outputField" readonly id="field_cin_rms">
+
+                        <span class="input-group-text bg-dark text-white" data-toggle="tooltip"
+                            title="Output Capacitor RMS Current">$I_{Cout_{RMS}} (A)$</span>
+                        <input type="number" class="form-control outputField" readonly id="field_cout_rms">
+                    </div>
+
+
+                    <nav>
+                        <div class="nav nav-tabs" id="nav-tab" role="tablist">
+                            <button class="nav-link active" id="plot-duty-tab" data-bs-toggle="tab" data-bs-target="#plot-duty" type="button" role="tab" aria-controls="plot-duty" aria-selected="true">Duty</button>
+                            <button class="nav-link" id="plot-Irms-tab" data-bs-toggle="tab" data-bs-target="#plot-Irms" type="button" role="tab" aria-controls="plot-Irms" aria-selected="false">$I_{RMS}$</button>
+                        </div>
+                    </nav>
+                    <div class="tab-content" id="nav-tabContent">
+                        <div class="tab-pane fade show active" id="plot-duty" role="tabpanel" aria-labelledby="plot-duty">
+                        </div>
+                        <div class="tab-pane fade" id="plot-Irms" role="tabpanel" aria-labelledby="plot-Irms">
+                        </div>
+                    </div>
+
+            </div>
+        </div>
+    </div>
+
+    <!-- __COMMON_BODY_START__ -->
+  <div style="height: 100%"></div>
+  <footer class="footer">
+    <div class="container">
+      <div class="row justify-content-left">
+        <div class="col-auto">
+          <a href="/" class="text-white"><i class="fas fa-home"></i></a>
+        </div>
+        <div class="col-auto">
+          <a href="https://github.com/chsotiriou/simpleelectronicstools" class="text-white"><i class="fab fa-github"></i></a>
+        </div>
+        <div class="col-auto">
+          <a href="https://csotiriou.com" class="text-white"><i class="fas fa-globe"></i></a>
+        </div>
+      </div>
+    </div>
+  </footer>
+<!-- __COMMON_BODY_END__ -->
+
+    <!-- Bootstrap JS (Popper and Bootstrap JS) -->
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.6/dist/umd/popper.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.min.js"></script>
+
+    <script src="https://cdn.plot.ly/plotly-2.35.2.min.js" charset="utf-8"></script>
+
+    <!-- External JavaScript (now in the /js folder) -->
+    <script src="js/converters.js"></script>
+    <script src="js/main.js"></script>
+
+</body>
+
+</html>

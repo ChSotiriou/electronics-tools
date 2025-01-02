@@ -1,0 +1,8 @@
+.outputField {
+    background-color: lightgray;
+}
+
+.inputField:invalid {
+    background-color: lightcoral;
+
+}

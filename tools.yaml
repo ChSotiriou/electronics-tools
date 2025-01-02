@@ -9,3 +9,7 @@ LTSpice:
   "MultiParameter Sweep":
     link: 'tools/ltspice/multiParameterSweep'
     desc: 'Create commands to step multiple parameters at once in LTSpice, running a simulation for all possible combination of parameters.'
+General:
+  "DC-DC Converter Designer":
+    link: 'tools/general/power-converter-designer'
+    desc: 'Simple design tool for DC-DC converters'

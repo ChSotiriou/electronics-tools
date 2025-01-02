@@ -20,3 +20,9 @@ These were created because of some pain points that I found while trying to do s
 | Tool | Description |
 |------|-------------|
 |MultiParameter Sweep | Create commands to step multiple parameters at once in LTSpice, running a simulation for all possible combination of parameters. |
+
+### General
+
+| Tool | Description |
+|------|-------------|
+|DC-DC Converter Designer | Simple design tool for DC-DC converters|

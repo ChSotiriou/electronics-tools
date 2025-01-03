@@ -4,21 +4,66 @@ const range = (start, end, step = 1) =>
         (_, i) => i * step + start
     );
 
+function plottly_xline(x, y_min = -1e10, y_max = 1e10) {
+    return {
+        type: 'line',
+        x0: x,  // X position where the vertical line starts
+        x1: x,  // X position where the vertical line ends
+        y0: y_min,  // Y position where the line starts
+        y1: y_max, // Y position where the line ends
+        line: {
+            color: 'red',
+            width: 1
+        }
+    }
+}
+
+function plottly_yline(y, x_min = -1e10, x_max = 1e10) {
+    return {
+        type: 'line',
+        y0: y,  // X position where the vertical line starts
+        y1: y,  // X position where the vertical line ends
+        x0: x_min,  // Y position where the line starts
+        x1: x_max, // Y position where the line ends
+        line: {
+            color: 'red',
+            width: 1,
+        }
+    }
+}
 function doPlots(cnv) {
     duties = range(0, 1, 1e-3)
 
     Plotly.newPlot(document.getElementById('plot-duty'), [{
-        x: duties.map(x => x * 100),
-        y: cnv.calculateOutputVoltage(cnv.Vin, duties),
+        x: cnv.calculateOutputVoltage(duties),
+        y: duties.map(x => x * 100),
     }], {
         margin: { t: 0 },
         yaxis: {
-            title: "Output Voltage (V)",
-            range: cnv.type == 'buck' ? [0, cnv.Vin * 1.1] : [0, cnv.Vin * 10]
+            title: "Duty Cycle (%)",
+            // range: cnv.type == 'buck' ? [0, cnv.Vin * 1.1] : [0, cnv.Vin * 10]
+            range: [0, 110]
         },
         xaxis: {
-            title: "Duty Cycle (%)"
-        }
+            title: "Input Voltage (V)",
+            range: [0, (cnv.Vin_max + cnv.Vin_min) * 2]
+        },
+        shapes: [
+            {
+                type: 'rect',
+                x0: cnv.Vin_min,
+                x1: cnv.Vin_max,
+                y0: 0,
+                y1: 1e10,
+                fillcolor: 'rgba(255, 0, 0, 0.2)',
+                line: {
+                    color: 'red',
+                    width: 0
+                }
+            },
+            plottly_yline(cnv.duty_Vmin * 100), plottly_yline(cnv.duty_Vmax * 100),
+            plottly_xline(cnv.Vin_min), plottly_xline(cnv.Vin_max)
+        ]
     });
 
     Plotly.newPlot(document.getElementById('plot-Irms'), [{
@@ -45,8 +90,45 @@ function doPlots(cnv) {
         },
         xaxis: {
             title: "Duty Cycle (%)"
-        }
+        },
+        shapes: [
+            {
+                type: 'rect',
+                x0: cnv.duty_Vmax * 100,
+                x1: cnv.duty_Vmin * 100,
+                y0: 0,
+                y1: 1e10,
+                fillcolor: 'rgba(255, 0, 0, 0.2)',
+                line: {
+                    color: 'red',
+                    width: 0
+                }
+            }, 
+        ]
     });
+}
+
+function updateValidityLimits() {
+    type = document.getElementById('select-converter-type').value
+
+    vin_min = document.getElementById('field_Vin_min')
+    vin_max = document.getElementById('field_Vin_max')
+
+    vout = document.getElementById('field_Vout')
+
+    if (vin_min.validity.valid) {
+        vin_max.min = vin_min.valueAsNumber
+    }
+
+    if (vin_min.validity.valid && vin_max.validity.valid) {
+        if (type == 'buck') {
+            vout.removeAttribute('min')
+            vout.max = vin_min.valueAsNumber
+        } else if (type == 'boost') {
+            vout.min = vin_max.valueAsNumber
+            vout.removeAttribute('max')
+        }
+    }
 }
 
 const converterTypeMap = {
@@ -56,10 +138,18 @@ const converterTypeMap = {
 
 Array.from(document.getElementsByClassName('inputField')).forEach((elem) => {
     elem.addEventListener('change', (event) => {
+        updateValidityLimits()
+
+        if (!Array.from(document.getElementsByClassName('inputField')).every(f => f.validity.valid)) {
+            return
+        }
+
         // Inputs
         type = document.getElementById('select-converter-type').value
 
-        vin = document.getElementById('field_Vin').valueAsNumber
+        vin_min = document.getElementById('field_Vin_min').valueAsNumber
+        vin_max = document.getElementById('field_Vin_max').valueAsNumber
+
         vout = document.getElementById('field_Vout').valueAsNumber
         vout_ripple = document.getElementById('field_Vout_ripple').valueAsNumber / 1000
         vin_ripple = document.getElementById('field_Vin_ripple').valueAsNumber / 1000
@@ -72,7 +162,7 @@ Array.from(document.getElementsByClassName('inputField')).forEach((elem) => {
         Vd_drop = document.getElementById('field_diode_drop').valueAsNumber
 
         cnv = new converterTypeMap[type](
-            vin, vout, vout_ripple, vin_ripple,
+            vin_min, vin_max, vout, vout_ripple, vin_ripple,
             r_max, Io_max, fs,
             Rds_on, Vd_drop
         )
@@ -97,26 +187,7 @@ Array.from(document.getElementsByClassName('inputField')).forEach((elem) => {
 })
 
 document.getElementById('select-converter-type').addEventListener('change', event => {
-    switch (event.target.value) {
-        case "buck":
-            
-            break;
-    
-        case "boost":
-            
-
-
-            break;
-
-        case "buck-boost":
-
-
-            break;
-
-        default:
-            alert("Invalid Case statement - [1]")
-    }
-    document.getElementById('field_Vin').dispatchEvent(new Event('change'))
+    document.getElementById('field_Vin_min').dispatchEvent(new Event('change'))
 })
 
-document.getElementById('field_Vin').dispatchEvent(new Event('change'))
+document.getElementById('field_Vin_min').dispatchEvent(new Event('change'))

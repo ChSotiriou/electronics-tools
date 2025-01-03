@@ -187,6 +187,11 @@ Array.from(document.getElementsByClassName('inputField')).forEach((elem) => {
 })
 
 document.getElementById('select-converter-type').addEventListener('change', event => {
+    // hide all imgaes
+    Array.from(document.getElementsByClassName('converter-img')).forEach(x => x.hidden = true)
+    document.getElementById(`img-${document.getElementById('select-converter-type').value}`).removeAttribute('hidden')
+
+    // show correct image
     document.getElementById('field_Vin_min').dispatchEvent(new Event('change'))
 })
 

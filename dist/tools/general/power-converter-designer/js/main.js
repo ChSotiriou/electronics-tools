@@ -64,7 +64,7 @@ function doPlots(cnv) {
             plottly_yline(cnv.duty_Vmin * 100), plottly_yline(cnv.duty_Vmax * 100),
             plottly_xline(cnv.Vin_min), plottly_xline(cnv.Vin_max)
         ]
-    });
+    }, {responsive: true});
 
     Plotly.newPlot(document.getElementById('plot-Irms'), [{
         x: duties.map(x => x * 100),
@@ -105,7 +105,7 @@ function doPlots(cnv) {
                 }
             }, 
         ]
-    });
+    }, {responsive: true});
 }
 
 function updateValidityLimits() {

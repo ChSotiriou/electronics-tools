@@ -69,7 +69,7 @@
             <div class="col-md-8 offset-md-2">
                 <h1 class="text-center mb-4">Analog Filter Designer</h1>
 
-                <div class="input-group mb-3">
+                <div class="row input-group mb-3">
                     <span class="input-group-text bg-dark text-white" data-toggle="tooltip"
                         title="Filter Type Selection">Type</span>
                     <select class="form-control input-field" id="select-filter-type">
@@ -97,14 +97,27 @@
 
                 <hr />
 
+                <div class="col-xs-6">
+                </div>
+                <div class="col-xs-6 text-center w-75">
+                </div>
+
+<div class="row row-no-gutters">
+  <div class="col-xs-12 col-md-4 align-middle text-align-middle center">
+                    <div class="filter-equation" id="eq-se_rc">$$\omega_c = \frac{1}{R_1C_1}$$</div>
+                    <div hidden class="filter-equation" id="eq-diff_rc">$$\omega_c = \frac{1}{2R_1C_1}$$</div>
+  </div>
+  <div class="col-xs-6 col-md-8">
+                    <img style="width: 100%" src="assets/se_rc.svg" id="filter-img"></img>
+</div>
+</div>
+
+                <hr />
+
                 <div id="plot">
                 </div>
 
                 <hr />
-                <!-- <div class="text-center w-50">
-                    <img></img>
-                </div> -->
-                <!-- <hr /> -->
 
                 <div class="input-group mb-3 h-20">
                     <textarea class="form-control" id="spice-input" readonly></textarea>

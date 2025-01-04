@@ -73,6 +73,10 @@ function update() {
     Array.from(document.getElementsByClassName('type-input-group')).forEach(x => x.hidden = true)
     Array.from(document.getElementsByClassName(`div-type-${sim_name}`)).forEach(x => x.removeAttribute('hidden'))
 
+    Array.from(document.getElementsByClassName('filter-equation')).forEach(x => x.hidden = true)
+    document.getElementById(`eq-${sim_name}`).removeAttribute('hidden')
+
+    document.getElementById('filter-img').src = `assets/${sim_name}.svg`
 
     args_elem = Array.from(document.getElementsByClassName(`type-${sim_name}`))
     if (!args_elem.every(x => x.validity.valid)) return

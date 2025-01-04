@@ -104,6 +104,7 @@ function doPlots(cnv) {
                     width: 0
                 }
             }, 
+            plottly_xline(cnv.duty_Vmin * 100), plottly_xline(cnv.duty_Vmax * 100),
         ]
     }, {responsive: true});
 }

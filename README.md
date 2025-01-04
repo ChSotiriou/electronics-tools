@@ -26,3 +26,4 @@ These were created because of some pain points that I found while trying to do s
 | Tool | Description |
 |------|-------------|
 |DC-DC Converter Designer | Simple design tool for DC-DC converters|
+|Analog Filter Designer | A tool to simulitate different filters with `ngspice` right in the browser|

@@ -49,8 +49,7 @@ function ngrp(data) {
         out['data'].push({
             'name': varName,
             'type': type,
-            'v1': [],
-            'v2': [],
+            'value': [],
         })
     }
 
@@ -60,10 +59,9 @@ function ngrp(data) {
         for (let j = 0; j < out['varCount']; j++) {
             values = next().split("\t").slice(-1)[0].split(",")
             
-            v1 = parseFloat(values[0])
-            v2 = parseFloat(values[1])
-            out['data'][j]['v1'].push(v1)
-            out['data'][j]['v2'].push(v2)
+            re = parseFloat(values[0])
+            im = parseFloat(values[1])
+            out['data'][j]['value'].push(Complex(re, im))
         }
     }
     

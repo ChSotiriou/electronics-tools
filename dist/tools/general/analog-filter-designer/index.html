@@ -74,38 +74,63 @@
             <div class="col-md-8 offset-md-2">
                 <h1 class="text-center mb-4">Analog Filter Designer</h1>
 
-                <div class="row input-group mb-3">
+                <div class="input-group mb-3">
                     <span class="input-group-text bg-dark text-white" data-toggle="tooltip"
                         title="Filter Type Selection">Type</span>
                     <select class="form-control input-field" id="select-filter-type">
-                        <option value="se_rc">Single Ended RC</option>
+                        <option value="se_rc">Single Ended RC LPF</option>
+                        <option value="se_rc_hpf">Single Ended RC HPF</option>
                         <option value="diff_rc">Differential RC</option>
+                        <option value="lrc_lpf">LRC LPF</option>
                     </select>
-                </div>
-
-                <div class="input-group mb-3 div-type-se_rc div-type-diff_rc type-input-group">
                     <span class="input-group-text bg-dark text-white" data-toggle="tooltip"
                         title="Max Simulation Frequency">$f_{max}$</span>
-                    <input required type="text" class="form-control mode-specific input-field type-se_rc type-diff_rc"
+                    <input required type="text" class="form-control mode-specific input-field type-se_rc type-se_rc_hpf type-diff_rc type-lrc_lpf"
                         id="max-freq" placeholder="(e.g. 100k, 10Meg)" value="1Meg">
+                </div>
 
+                <!-- <div class="input-group mb-3 div-type-se_rc div-type-diff_rc div-type-se_rc_hpf div-type-lrc_lpf type-input-group"> -->
+                <!-- </div> -->
+
+                <div class="input-group mb-3 div-type-se_rc div-type-diff_rc div-type-se_rc_hpf type-input-group">
                     <span class="input-group-text bg-dark text-white" data-toggle="tooltip"
                         title="Resistance R1 value">$R_1$</span>
-                    <input required type="text" class="form-control mode-specific input-field type-se_rc type-diff_rc"
+                    <input required type="text" class="form-control mode-specific input-field type-se_rc type-se_rc_hpf type-diff_rc"
                         id="RC_R1" placeholder="(e.g. 100k, 1Meg)" value="1k">
 
                     <span class="input-group-text bg-dark text-white" data-toggle="tooltip"
                         title="Capacitance C1 value">$C_1$</span>
-                    <input required type="text" class="form-control mode-specific input-field type-se_rc type-diff_rc"
+                    <input required type="text" class="form-control mode-specific input-field type-se_rc type-se_rc_hpf type-diff_rc"
                         id="RC_C1" placeholder="(100n, 1u)" value="100n">
+                </div>
+
+                <div hidden class="input-group mb-3 div-type-lrc_lpf type-input-group">
+                    <span class="input-group-text bg-dark text-white" data-toggle="tooltip"
+                        title="Inductance L1 value">$L_1$</span>
+                    <input required type="text" class="form-control mode-specific input-field type-lrc_lpf"
+                        id="LRC_L1" placeholder="(100n, 1u)" value="10u">
+
+                    <span class="input-group-text bg-dark text-white" data-toggle="tooltip"
+                        title="Resistance R1 value">$R_1$</span>
+                    <input required type="text" class="form-control mode-specific input-field type-lrc_lpf"
+                        id="LRC_R1" placeholder="(e.g. 100m)" value="100m">
+
+                    <span class="input-group-text bg-dark text-white" data-toggle="tooltip"
+                        title="Capacitance C1 value">$C_1$</span>
+                    <input required type="text" class="form-control mode-specific input-field type-lrc_lpf"
+                        id="RC_C1" placeholder="(100n, 1u)" value="10u">
                 </div>
 
                 <hr />
 
                 <div class="row row-no-gutters">
-                    <div class="col-xs-12 col-md-4 align-middle text-align-middle fs-2">
+                    <div class="col-xs-12 col-md-4 align-middle text-align-middle fs-4">
                         <div class="filter-equation" id="eq-se_rc">$$\omega_c = \frac{1}{R_1C_1}$$</div>
+                        <div hidden class="filter-equation" id="eq-se_rc_hpf">$$\omega_c = \frac{1}{R_1C_1}$$</div>
                         <div hidden class="filter-equation" id="eq-diff_rc">$$\omega_c = \frac{1}{2R_1C_1}$$</div>
+                        <div hidden class="filter-equation" id="eq-lrc_lpf">
+                            $$\omega_r = \frac{1}{\sqrt{L_1C_1}}$$
+                        </div>
                     </div>
                     <div class="col-xs-6 col-md-8">
                         <img style="width: 100%;" src="assets/se_rc.svg" id="filter-img"></img>
@@ -154,6 +179,7 @@
     <script src="https://cdn.plot.ly/plotly-2.35.2.min.js" charset="utf-8"></script>
 
     <!-- External JavaScript (now in the /js folder) -->
+    <script src="js/complex.min.js"></script>
     <script src="js/ngrp.js"></script>
     <script src="js/ngspice.js"></script>
     <script src="js/models.js"></script>

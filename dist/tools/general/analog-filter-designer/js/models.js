@@ -28,10 +28,11 @@ downloadURL = function(data, fileName) {
 };
 
 
-const sim_command = `.ac dec 100 1 {0}`
+const sim_command = `.ac dec 500 1 {0}`
 
 const sim_models = {
-    'se_rc': `Single Ended RC
+    // ----------------------------------------
+    'se_rc': `Single Ended RC LPF
 R1 Vin Vout+ {1}
 C1 Vout+ 0 {2}
 VCC Vin 0 AC 1.
@@ -41,6 +42,18 @@ ${sim_command}
 
 .end`,
 
+    // ----------------------------------------
+    'se_rc_hpf': `Single Ended RC HPF
+C1 Vin Vout+ {2}
+R1 Vout+ 0 {1}
+VCC Vin 0 AC 1.
+
+${sim_command}
+.save V(vout+)
+
+.end`,
+
+    // ----------------------------------------
     'diff_rc': `Differential RC
 
 R1 Vin Vout+ {1}
@@ -54,6 +67,17 @@ ${sim_command}
 
 .end`,
 
+    // ----------------------------------------
+    'lrc_lpf': `LRC LPF 1
+L1 Vin 1 {1}
+R1 1 Vout+ {2}
+C1 Vout+ 0 {3}
+VCC Vin 0 AC 1.
+
+${sim_command}
+.save V(vout+)
+
+.end`,
 }
 
 const spiceinit = `

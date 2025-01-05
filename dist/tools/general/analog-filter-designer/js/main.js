@@ -35,30 +35,53 @@ function processSimulation() {
         rawData = raw
         data = ngrp(raw)
 
-        freq = data['data'][0]['v1']
+        freq = data['data'][0]['value'].map(x => x.abs())
+
         vout_p = data['data'].filter(x => x.name.toLowerCase() == 'v(vout+)')[0]
         vout_n = data['data'].filter(x => x.name.toLowerCase() == 'v(vout-)')[0]
         
-        y_data = vout_p['v1']
-        if (vout_n != undefined) y_data = y_data.map((x, i) => x - vout_n['v1'][i])
+        vout = vout_p['value']
+        if (vout_n != undefined) vout = vout.map((x, i) => x.sub(vout_n['value'][i]))
 
-        y_data = y_data.map(x => 10*Math.log10(x))
-        cutoff = freq[y_data.indexOf(y_data.reduce((c, v) => Math.abs(v - (-3)) < Math.abs(c - (-3)) ? v : c ))]
+        amplitude = vout.map(x => 10*Math.log10(x.abs()))
+        phase = vout.map(x => 180 * x.arg() / Math.PI)
+        cutoff = freq[amplitude.indexOf(amplitude.reduce((c, v) => Math.abs(v - (-3)) < Math.abs(c - (-3)) ? v : c ))]
 
         Plotly.newPlot(document.getElementById('plot'), [{
             x: freq,
-            y: y_data
+            y: amplitude
+        }, {
+            x: freq,
+            y: phase,
+            yaxis: 'y2',
+            line: {
+                dash: 'dot',
+            }
         }], {
             margin: { t: 0 },
+            showlegend: false,
             yaxis: {
-                title: "Attenuation (dB)",
+                title: {
+                    text: "Attenuation (dB)",
+                    font: {color: '#1F77B4'}
+                },
+                tickfont: {color: '#1F77B4'},
+            },
+            yaxis2: {
+                title: {
+                    text: 'Phase (deg)',
+                    font: {color: '#FF7F0E'}
+                },
+                tickfont: {color: '#FF7F0E'},
+                overlaying: 'y',
+                side: 'right'
             },
             xaxis: {
                 type: 'log',
                 title: "Frequency (Hz)",
             },
             shapes: [
-                plottly_xline(cutoff, y_min=Math.min(...y_data), y_max=0)
+                plottly_xline(cutoff, y_min=Math.min(...amplitude), y_max=Math.max(...amplitude))
             ]
         }, {
             responsive: true

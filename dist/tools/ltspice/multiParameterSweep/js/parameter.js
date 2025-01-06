@@ -3,6 +3,7 @@ class Parameter {
     constructor(designator, values) {
         this.designator = designator; // Initialize property1
         this.values = values; // Initialize property2
+        this.description = ''
     }
 
     totalValues() {
@@ -11,7 +12,9 @@ class Parameter {
 
     // Static method (called on the class, not on an instance)
     static createFromListSweep(inputs) {
-        return new Parameter(inputs[0], inputs[1].replaceAll(' ', '').split(','))
+        var ret = new Parameter(inputs[0], inputs[1].replaceAll(' ', '').split(','))
+        ret.description = `${ret.designator} - list`
+        return ret
     }
 
     static createFromToleranceSweep(inputs) {
@@ -22,11 +25,14 @@ class Parameter {
         }).join('')
 
         const baseVal = parseFloat(baseValStr)
-        return new Parameter(inputs[0], 
+
+        var ret = new Parameter(inputs[0], 
             [
                 `${baseVal*(1-tolerance/100)}${units}`, 
                 `${baseVal}${units}`, 
                 `${baseVal*(1+tolerance/100)}${units}`
             ])
+        ret.description = `${ret.designator} - ${baseValStr} - ${tolerance}%`
+        return ret
     }
 }

@@ -103,6 +103,9 @@ document.getElementById('generateCommandsBtn').addEventListener('click', functio
     runStates = generateRunStates(...params)
 
     command = ""
+    command += params.reduce((str, param) => {
+        return `${str}*${param.description}\n`
+    }, "")
     command += `.step param run_idx 1 ${runStates.length} 1\n`
     params.forEach((param, param_idx) => {
         values = runStates.reduce((str, v, i) => {

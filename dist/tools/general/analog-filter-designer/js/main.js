@@ -43,7 +43,7 @@ function processSimulation() {
         vout = vout_p['value']
         if (vout_n != undefined) vout = vout.map((x, i) => x.sub(vout_n['value'][i]))
 
-        amplitude = vout.map(x => 10*Math.log10(x.abs()))
+        amplitude = vout.map(x => 20*Math.log10(x.abs()))
         phase = vout.map(x => 180 * x.arg() / Math.PI)
         cutoff = freq[amplitude.indexOf(amplitude.reduce((c, v) => Math.abs(v - (-3)) < Math.abs(c - (-3)) ? v : c ))]
 

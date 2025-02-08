@@ -30,6 +30,13 @@ downloadURL = function(data, fileName) {
 
 const sim_command = `.ac dec 500 1 {0}`
 
+const freq_models = {
+    'se_rc': (args) => 1/(2*Math.PI*args[1]*args[2]),
+    'se_rc_hpf': (args) => 1/(2*Math.PI*args[1]*args[2]),
+    'diff_rc': (args) => 1/(2*2*Math.PI*args[1]*args[2]),
+    'lrc_lpf': (args) => 1/(2*Math.PI*Math.sqrt(args[1]*args[3])),
+}
+
 const sim_models = {
     // ----------------------------------------
     'se_rc': `Single Ended RC LPF

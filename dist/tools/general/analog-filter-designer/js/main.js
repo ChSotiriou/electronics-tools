@@ -105,9 +105,13 @@ function update() {
     if (!args_elem.every(x => x.validity.valid)) return
 
     args = args_elem.map(x => x.value)
+    args_num = args.map(x => eng2num(x))
 
     sim_model = createFormattedString(sim_models[sim_name], args)
     document.getElementById('spice-input').textContent = sim_model
+
+    freq = freq_models[sim_name](args_num)
+    document.getElementById("out_fc").value = num2eng(freq) + 'Hz'
 
     processSimulation()
 }

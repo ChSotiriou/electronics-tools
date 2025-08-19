@@ -16,3 +16,6 @@ General:
   "Analog Filter Designer":
     link: 'tools/general/analog-filter-designer'
     desc: 'A tool to simulitate different filters with ngspice right in the browser'
+  "PMSM Operating Limits":
+    link: 'tools/general/pmsm-limits'
+    desc: 'Implements basic PMSM and plots limit circles (current, voltage, torque) in an id-iq plane'

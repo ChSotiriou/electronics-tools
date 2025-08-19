@@ -121,6 +121,7 @@ function updateValidityLimits() {
 
 Array.from(document.getElementsByClassName('inputField')).forEach((elem) => {
     elem.addEventListener('change', (event) => {
+
         updateValidityLimits()
 
         if (!Array.from(document.getElementsByClassName('inputField')).every(f => f.validity.valid)) {
@@ -131,17 +132,17 @@ Array.from(document.getElementsByClassName('inputField')).forEach((elem) => {
         inputs["Ld"] = document.getElementById('field_Ld').valueAsNumber * 1e-6
         inputs["Lq"] = document.getElementById('field_Lq').valueAsNumber * 1e-6
         inputs["Rs"] = document.getElementById('field_Rs').valueAsNumber * 1e-3
-        inputs["P"] = document.getElementById('field_polePairs').valueAsNumber
+        inputs["P"] = document.getElementById('field_P').valueAsNumber
         inputs["Ke"] = document.getElementById('field_Ke').valueAsNumber
         inputs["lambda_m"] = inputs["Ke"] * 60 / (1000 * inputs["P"] * 2 * Math.PI)
 
-        inputs["currentLimit"] = document.getElementById('field_currentLimit').valueAsNumber
+        inputs["Ilim"] = document.getElementById('field_Ilim').valueAsNumber
         inputs["Vdc"] = document.getElementById('field_Vdc').valueAsNumber
 
         inputs["voltageCurvesRPMs"] = document.getElementById('field_voltageCurvesRPM').value.split(",").map(x => Number(x))
         inputs["torqueCurves"] = document.getElementById('field_torqueCurves').value.split(",").map(x => Number(x))
 
-        ax_lims = inputs["currentLimit"] * 1.2
+        ax_lims = inputs["Ilim"] * 1.2
 
         plot_data = []
 
@@ -153,7 +154,7 @@ Array.from(document.getElementsByClassName('inputField')).forEach((elem) => {
             type: "contour",
             x: id,
             y: iq,
-            z: iq.map(IQ => id.map(ID => ID ** 2 + IQ ** 2 - inputs["currentLimit"]**2)),
+            z: iq.map(IQ => id.map(ID => ID ** 2 + IQ ** 2 - inputs["Ilim"]**2)),
             label: "Current Limit"
         })
 
@@ -195,50 +196,35 @@ Array.from(document.getElementsByClassName('inputField')).forEach((elem) => {
             })
         })
 
-
-
         doPlots(plot_data)
-
-        // Inputs
-        // type = document.getElementById('select-converter-type').value
-
-        // vin_min = document.getElementById('field_Vin_min').valueAsNumber
-        // vin_max = document.getElementById('field_Vin_max').valueAsNumber
-
-        // vout = document.getElementById('field_Vout').valueAsNumber
-        // vout_ripple = document.getElementById('field_Vout_ripple').valueAsNumber / 1000
-        // vin_ripple = document.getElementById('field_Vin_ripple').valueAsNumber / 1000
-
-        // r_max = document.getElementById('field_r_max').valueAsNumber
-        // Io_max = document.getElementById('field_Io_max').valueAsNumber
-        // fs = document.getElementById('field_fs').valueAsNumber * 1000
-
-        // Rds_on = document.getElementById('field_switch_RdsOn').valueAsNumber / 1000
-        // Vd_drop = document.getElementById('field_diode_drop').valueAsNumber
-
-        // cnv = new converterTypeMap[type](
-        //     vin_min, vin_max, vout, vout_ripple, vin_ripple,
-        //     r_max, Io_max, fs,
-        //     Rds_on, Vd_drop
-        // )
-
-        // // Outputs
-        // document.getElementById('field_duty').valueAsNumber = cnv.duty.toFixed(3)
-        // document.getElementById('field_deltaI').valueAsNumber = cnv.deltaI.toFixed(3)
-        // document.getElementById('field_L').valueAsNumber = (cnv.L * 1e6).toFixed(3)
-        // document.getElementById('field_switch_drop').valueAsNumber = (cnv.Vsw_drop * 1e3).toFixed(3)
-
-        // document.getElementById('field_Cin').valueAsNumber = (cnv.Cin * 1e6).toFixed(3)
-        // document.getElementById('field_Cout').valueAsNumber = (cnv.Cout * 1e6).toFixed(3)
-
-        // document.getElementById('field_switch_rms').valueAsNumber = (cnv.Isw_rms).toFixed(3)
-        // document.getElementById('field_diode_rms').valueAsNumber = (cnv.Id_rms).toFixed(3)
-
-        // document.getElementById('field_cin_rms').valueAsNumber = (cnv.Icin_rms).toFixed(3)
-        // document.getElementById('field_cout_rms').valueAsNumber = (cnv.Icout_rms).toFixed(3)
-
-        // doPlots(cnv)
     })
+})
+
+document.getElementById('url_create').addEventListener('click', (event) => {
+    console.log('pressed')
+    var url = new URL(window.location.href); url.search = ''
+    for (let field of document.getElementsByClassName('inputField')) {
+        url.searchParams.append(field.id.split("field_")[1], field.value)
+    }
+
+    if (window.isSecureContext && navigator.clipboard)
+        navigator.clipboard.writeText(url.toString());
+
+    setTimeout(function() {
+        if (window.isSecureContext && navigator.clipboard) {
+            alert("URL has been copied to clipboard.")
+        } else {
+            alert("URL has been generated. Copy it from the URL bar.")
+        }
+
+        window.location.href = url.toString()
+    }, 50);
+})
+
+var url = new URL(window.location.href);
+url.searchParams.forEach((v, k) => {
+    field = document.getElementById(`field_${k}`)
+    if (field) field.value = v  
 })
 
 document.getElementById('field_Ld').dispatchEvent(new Event('change'))

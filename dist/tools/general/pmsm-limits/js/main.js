@@ -139,8 +139,13 @@ Array.from(document.getElementsByClassName('inputField')).forEach((elem) => {
         inputs["Ilim"] = document.getElementById('field_Ilim').valueAsNumber
         inputs["Vdc"] = document.getElementById('field_Vdc').valueAsNumber
 
-        inputs["voltageCurvesRPMs"] = document.getElementById('field_voltageCurvesRPM').value.split(",").map(x => Number(x))
-        inputs["torqueCurves"] = document.getElementById('field_torqueCurves').value.split(",").map(x => Number(x))
+        vals = document.getElementById('field_voltageCurvesRPM').value
+        if (vals.length == 0) inputs["voltageCurvesRPMs"] = []
+        else inputs["voltageCurvesRPMs"] = vals.split(",").map(x => Number(x))
+
+        vals = document.getElementById('field_torqueCurves').value
+        if (vals.length == 0) inputs["torqueCurves"] = []
+        else inputs["torqueCurves"] = vals.split(",").map(x => Number(x))
 
         ax_lims = inputs["Ilim"] * 1.2
 
@@ -150,22 +155,33 @@ Array.from(document.getElementsByClassName('inputField')).forEach((elem) => {
         iq = linspace(-ax_lims, ax_lims, 100)
 
         // current limit circle
-        plot_data.push({
-            type: "contour",
-            x: id,
-            y: iq,
-            z: iq.map(IQ => id.map(ID => ID ** 2 + IQ ** 2 - inputs["Ilim"]**2)),
-            label: "Current Limit"
-        })
+        if (document.getElementById('field_cb_current').checked) 
+            plot_data.push({
+                type: "contour",
+                x: id,
+                y: iq,
+                z: iq.map(IQ => id.map(ID => ID ** 2 + IQ ** 2 - inputs["Ilim"]**2)),
+                label: "Current Limit"
+            })
 
         // MTPA Curve
-        plot_data.push({
-            type: "contour",
-            x: id,
-            y: iq,
-            z: iq.map(IQ => id.map(ID => ID ** 2 - IQ ** 2 + ID*inputs["lambda_m"]/(inputs["Ld"]-inputs["Lq"]))),
-            label: "MTPA"
-        })
+        if (document.getElementById('field_cb_MTPA').checked) 
+            plot_data.push({
+                type: "contour",
+                x: id,
+                y: iq,
+                z: iq.map(IQ => id.map(ID => ID ** 2 - IQ ** 2 + ID*inputs["lambda_m"]/(inputs["Ld"]-inputs["Lq"]))),
+                label: "MTPA"
+            })
+
+        if (document.getElementById('field_cb_unityPF').checked) 
+            plot_data.push({
+                type: "contour",
+                x: id,
+                y: iq,
+                z: iq.map(IQ => id.map(ID => inputs.Ld*ID*ID + inputs.Lq*IQ*IQ + inputs.lambda_m*ID  )),
+                label: "Unity PF"
+            })
 
         // Torque Curves
         inputs.torqueCurves.map(Te => 
@@ -204,7 +220,10 @@ document.getElementById('url_create').addEventListener('click', (event) => {
     console.log('pressed')
     var url = new URL(window.location.href); url.search = ''
     for (let field of document.getElementsByClassName('inputField')) {
-        url.searchParams.append(field.id.split("field_")[1], field.value)
+        if (field.type == 'checkbox')
+            url.searchParams.append(field.id.split("field_")[1], field.checked)
+        else
+            url.searchParams.append(field.id.split("field_")[1], field.value)
     }
 
     if (window.isSecureContext && navigator.clipboard)
@@ -224,7 +243,10 @@ document.getElementById('url_create').addEventListener('click', (event) => {
 var url = new URL(window.location.href);
 url.searchParams.forEach((v, k) => {
     field = document.getElementById(`field_${k}`)
-    if (field) field.value = v  
+    if (!field) return
+
+    if (field.type == "checkbox") field.checked = v == 'true'
+    else field.value = v  
 })
 
 document.getElementById('field_Ld').dispatchEvent(new Event('change'))
